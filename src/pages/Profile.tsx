@@ -1,14 +1,17 @@
 import { User, Car, Bell, Shield } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import BottomNav from "@/components/layout/BottomNav";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const Profile = () => {
+  const navigate = useNavigate();
+  
   const menuItems = [
-    { icon: Car, label: "My Vehicles", color: "text-primary" },
-    { icon: Bell, label: "Notifications", color: "text-accent" },
-    { icon: Shield, label: "Privacy & Security", color: "text-success" },
+    { icon: Car, label: "My Vehicles", color: "text-primary", path: "/vehicles" },
+    { icon: Bell, label: "Notifications", color: "text-accent", path: "/notifications" },
+    { icon: Shield, label: "Privacy & Security", color: "text-success", path: "/privacy" },
   ];
 
   return (
@@ -35,6 +38,7 @@ const Profile = () => {
             <Card 
               key={item.label}
               className="p-4 shadow-card hover:shadow-card-hover transition-shadow cursor-pointer"
+              onClick={() => navigate(item.path)}
             >
               <div className="flex items-center gap-3">
                 <item.icon className={`w-5 h-5 ${item.color}`} />
