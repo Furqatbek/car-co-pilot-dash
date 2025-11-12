@@ -8,27 +8,27 @@ const ParkingCard = () => {
   const { t } = useLanguage();
   const savedLocation = {
     lat: 40.7128,
-    lng: -74.0060,
-    address: "Downtown Parking"
+    lng: -74.006,
+    address: "Downtown Parking",
   };
 
   const handleSaveSpot = () => {
-    toast.success(t('dashboard.spotSaved'), {
-      description: t('dashboard.locationMarked')
+    toast.success(t("dashboard.spotSaved"), {
+      description: t("dashboard.locationMarked"),
     });
   };
 
   const handleNavigate = () => {
-    toast.info(t('dashboard.openingNav'));
+    toast.info(t("dashboard.openingNav"));
   };
 
   return (
     <Card className="p-5 shadow-card hover:shadow-card-hover transition-shadow">
       <div className="flex items-center gap-2 mb-4">
         <MapPin className="w-5 h-5 text-primary" />
-        <h2 className="text-lg font-semibold text-card-foreground">{t('dashboard.parking')}</h2>
+        <h2 className="text-lg font-semibold text-card-foreground">{t("dashboard.parking")}</h2>
       </div>
-      
+
       <div className="space-y-4">
         {savedLocation ? (
           <>
@@ -39,8 +39,8 @@ const ParkingCard = () => {
                   {savedLocation.lat.toFixed(4)}, {savedLocation.lng.toFixed(4)}
                 </p>
               </div>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 variant="ghost"
                 className="text-accent hover:text-accent hover:bg-accent/10"
                 onClick={handleNavigate}
@@ -50,15 +50,12 @@ const ParkingCard = () => {
             </div>
           </>
         ) : (
-          <p className="text-sm text-muted-foreground">{t('dashboard.noParking')}</p>
+          <p className="text-sm text-muted-foreground">{t("dashboard.noParking")}</p>
         )}
-        
-        <Button 
-          className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
-          onClick={handleSaveSpot}
-        >
+
+        <Button className="w-full bg-gradient-primary" onClick={handleSaveSpot}>
           <MapPin className="w-4 h-4 mr-2" />
-          {t('dashboard.saveSpot')}
+          {t("dashboard.saveSpot")}
         </Button>
       </div>
     </Card>
