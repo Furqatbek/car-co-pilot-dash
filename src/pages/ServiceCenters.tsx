@@ -10,6 +10,7 @@ import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ServiceCenter {
   id: string;
@@ -55,6 +56,7 @@ const categoryConfig = {
 
 const ServiceCenters = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markers = useRef<mapboxgl.Marker[]>([]);
@@ -67,6 +69,27 @@ const ServiceCenters = () => {
   const [selectedPlace, setSelectedPlace] = useState<ServiceCenter | null>(null);
   const { position, isLoading, getCurrentPosition, calculateDistance } = useGeolocation();
   const [serviceCenters, setServiceCenters] = useState<ServiceCenter[]>([]);
+
+  const categoryConfig = {
+    service: {
+      label: t('services.serviceCenters'),
+      icon: Wrench,
+      color: '#ef4444',
+      searchTerms: ['auto repair', 'car service', 'mechanic']
+    },
+    carwash: {
+      label: t('services.carWash'),
+      icon: Droplet,
+      color: '#3b82f6',
+      searchTerms: ['car wash']
+    },
+    gas: {
+      label: t('services.gasStations'),
+      icon: Fuel,
+      color: '#22c55e',
+      searchTerms: ['gas station', 'petrol station', 'fuel']
+    }
+  };
 
   const fetchMapboxToken = async () => {
     try {
@@ -363,7 +386,7 @@ const ServiceCenters = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="text-xl font-bold text-foreground">Service Centers</h1>
+          <h1 className="text-xl font-bold text-foreground">{t('services.title')}</h1>
         </div>
       </header>
 
@@ -372,9 +395,9 @@ const ServiceCenters = () => {
           <Card className="p-6 shadow-card">
             <div className="space-y-4">
               <div>
-                <h3 className="font-semibold text-card-foreground mb-2">Find Nearby Places</h3>
+                <h3 className="font-semibold text-card-foreground mb-2">{t('services.findNearby')}</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Enable location services to find service centers, car washes, and gas stations near you.
+                  {t('services.enableLocation')}
                 </p>
               </div>
               
@@ -384,7 +407,7 @@ const ServiceCenters = () => {
                 className="w-full"
               >
                 <Navigation className="w-4 h-4 mr-2" />
-                {isLoadingToken ? 'Loading...' : isLoading ? 'Getting Location...' : 'Enable Location'}
+                {isLoadingToken ? t('common.loading') : isLoading ? t('common.loading') : t('services.enableLocation')}
               </Button>
             </div>
           </Card>
@@ -393,7 +416,7 @@ const ServiceCenters = () => {
         {isMapInitialized && (
           <>
             <div className="space-y-3">
-              <h2 className="font-semibold text-foreground">Search by Category</h2>
+              <h2 className="font-semibold text-foreground">{t('services.searchByCategory')}</h2>
               <div className="flex gap-2 flex-wrap">
                 {(Object.keys(categoryConfig) as PlaceCategory[]).map((category) => {
                   const config = categoryConfig[category];
@@ -422,9 +445,9 @@ const ServiceCenters = () => {
                 <div className="space-y-3">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <h3 className="font-semibold text-card-foreground">Route to {selectedPlace.name}</h3>
+                      <h3 className="font-semibold text-card-foreground">{t('services.routeTo')} {selectedPlace.name}</h3>
                       <div className="flex gap-4 mt-2 text-sm text-muted-foreground">
-                        <span>{activeRoute.distance.toFixed(1)} km</span>
+                        <span>{activeRoute.distance.toFixed(1)} {t('services.kmAway')}</span>
                         <span>•</span>
                         <span>{Math.round(activeRoute.duration)} min</span>
                       </div>
@@ -440,7 +463,7 @@ const ServiceCenters = () => {
                         <div key={index} className="text-sm">
                           <p className="text-foreground">{step.instruction}</p>
                           <p className="text-muted-foreground text-xs">
-                            {step.distance > 0 && `${step.distance.toFixed(1)} km`}
+                            {step.distance > 0 && `${step.distance.toFixed(1)} ${t('services.kmAway')}`}
                           </p>
                         </div>
                       ))}
@@ -453,10 +476,10 @@ const ServiceCenters = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h2 className="font-semibold text-foreground">
-                  {serviceCenters.length > 0 ? `Found ${serviceCenters.length} Places` : 'Click a category to search'}
+                  {serviceCenters.length > 0 ? `${serviceCenters.length} ${t('services.foundPlaces')}` : t('services.clickCategory')}
                 </h2>
                 {isSearching && (
-                  <Badge variant="secondary">Searching...</Badge>
+                  <Badge variant="secondary">{t('services.searching')}</Badge>
                 )}
               </div>
               
@@ -473,7 +496,7 @@ const ServiceCenters = () => {
                         <p className="text-sm text-muted-foreground line-clamp-1">{center.address}</p>
                         {center.distance && (
                           <p className="text-sm text-primary mt-1">
-                            {center.distance.toFixed(2)} km away
+                            {center.distance.toFixed(2)} {t('services.kmAway')}
                           </p>
                         )}
                         <Button
@@ -483,7 +506,7 @@ const ServiceCenters = () => {
                           onClick={() => getDirections(center)}
                         >
                           <Route className="w-4 h-4 mr-2" />
-                          Get Directions
+                          {t('services.getDirections')}
                         </Button>
                       </div>
                     </div>
