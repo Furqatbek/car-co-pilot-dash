@@ -2,8 +2,10 @@ import { MapPin, Navigation } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const ParkingCard = () => {
+  const { t } = useLanguage();
   const savedLocation = {
     lat: 40.7128,
     lng: -74.0060,
@@ -11,20 +13,20 @@ const ParkingCard = () => {
   };
 
   const handleSaveSpot = () => {
-    toast.success("Parking spot saved!", {
-      description: "Location marked at your current position"
+    toast.success(t('dashboard.spotSaved'), {
+      description: t('dashboard.locationMarked')
     });
   };
 
   const handleNavigate = () => {
-    toast.info("Opening navigation...");
+    toast.info(t('dashboard.openingNav'));
   };
 
   return (
     <Card className="p-5 shadow-card hover:shadow-card-hover transition-shadow">
       <div className="flex items-center gap-2 mb-4">
         <MapPin className="w-5 h-5 text-primary" />
-        <h2 className="text-lg font-semibold text-card-foreground">Parking Spot</h2>
+        <h2 className="text-lg font-semibold text-card-foreground">{t('dashboard.parking')}</h2>
       </div>
       
       <div className="space-y-4">
@@ -48,7 +50,7 @@ const ParkingCard = () => {
             </div>
           </>
         ) : (
-          <p className="text-sm text-muted-foreground">No parking spot saved</p>
+          <p className="text-sm text-muted-foreground">{t('dashboard.noParking')}</p>
         )}
         
         <Button 
@@ -56,7 +58,7 @@ const ParkingCard = () => {
           onClick={handleSaveSpot}
         >
           <MapPin className="w-4 h-4 mr-2" />
-          Save Current Spot
+          {t('dashboard.saveSpot')}
         </Button>
       </div>
     </Card>

@@ -1,6 +1,7 @@
 import { FileText, AlertCircle, CheckCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Document {
   name: string;
@@ -9,10 +10,11 @@ interface Document {
 }
 
 const DocumentCard = () => {
+  const { t } = useLanguage();
   const documents: Document[] = [
-    { name: "Insurance", expiryDate: new Date("2025-03-15"), daysLeft: 125 },
-    { name: "Registration", expiryDate: new Date("2025-01-20"), daysLeft: 71 },
-    { name: "Inspection", expiryDate: new Date("2024-12-10"), daysLeft: 30 },
+    { name: t('dashboard.insurance'), expiryDate: new Date("2025-03-15"), daysLeft: 125 },
+    { name: t('dashboard.registration'), expiryDate: new Date("2025-01-20"), daysLeft: 71 },
+    { name: t('dashboard.inspection'), expiryDate: new Date("2024-12-10"), daysLeft: 30 },
   ];
 
   const nextExpiring = documents.reduce((prev, curr) => 
@@ -36,7 +38,7 @@ const DocumentCard = () => {
     <Card className="p-5 shadow-card hover:shadow-card-hover transition-shadow">
       <div className="flex items-center gap-2 mb-4">
         <FileText className="w-5 h-5 text-primary" />
-        <h2 className="text-lg font-semibold text-card-foreground">Document Expiry</h2>
+        <h2 className="text-lg font-semibold text-card-foreground">{t('dashboard.documents')}</h2>
       </div>
       
       <div className="space-y-3">
@@ -45,12 +47,12 @@ const DocumentCard = () => {
             <StatusIcon className={`w-5 h-5 ${nextExpiring.daysLeft <= 30 ? 'text-destructive' : 'text-success'}`} />
             <div>
               <p className="font-semibold text-card-foreground">{nextExpiring.name}</p>
-              <p className="text-sm text-muted-foreground">Next to expire</p>
+              <p className="text-sm text-muted-foreground">{t('dashboard.nextExpire')}</p>
             </div>
           </div>
           <div className="text-right">
             <p className="text-2xl font-bold text-card-foreground">{nextExpiring.daysLeft}</p>
-            <p className="text-xs text-muted-foreground">days left</p>
+            <p className="text-xs text-muted-foreground">{t('dashboard.daysLeft')}</p>
           </div>
         </div>
 

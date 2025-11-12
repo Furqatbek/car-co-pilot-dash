@@ -43,8 +43,8 @@ const MileageTracker = () => {
       
       setWatchId(id);
       toast({
-        title: "Tracking Started",
-        description: "Recording your mileage...",
+        title: t('mileage.trackingStarted'),
+        description: t('mileage.recording'),
       });
     }
   };
@@ -59,8 +59,8 @@ const MileageTracker = () => {
     if (totalDistance > 0) {
       setTripHistory(prev => [...prev, totalDistance]);
       toast({
-        title: "Trip Saved",
-        description: `Distance: ${totalDistance.toFixed(2)} km`,
+        title: t('mileage.tripSaved'),
+        description: `${t('mileage.distance')}: ${totalDistance.toFixed(2)} km`,
       });
     }
     
@@ -71,8 +71,8 @@ const MileageTracker = () => {
   const resetHistory = () => {
     setTripHistory([]);
     toast({
-      title: "History Cleared",
-      description: "All trip data has been reset",
+      title: t('mileage.historyCleared'),
+      description: t('mileage.dataReset'),
     });
   };
 
@@ -101,7 +101,7 @@ const MileageTracker = () => {
                 {totalDistance.toFixed(2)} <span className="text-lg">km</span>
               </h2>
               <p className="text-sm text-muted-foreground mt-1">
-                {isTracking ? 'Current Trip' : 'Ready to Track'}
+                {isTracking ? t('mileage.currentTrip') : t('mileage.readyTrack')}
               </p>
             </div>
 
@@ -109,21 +109,21 @@ const MileageTracker = () => {
               {!isTracking ? (
                 <Button onClick={startTracking} className="flex-1" size="lg">
                   <Play className="w-4 h-4 mr-2" />
-                  Start Tracking
+                  {t('mileage.startTracking')}
                 </Button>
               ) : (
                 <Button onClick={stopTracking} variant="destructive" className="flex-1" size="lg">
                   <Square className="w-4 h-4 mr-2" />
-                  Stop & Save
+                  {t('mileage.stopSave')}
                 </Button>
               )}
             </div>
 
             {position && (
               <div className="text-xs text-muted-foreground pt-4 border-t border-border">
-                <p>Lat: {position.coords.latitude.toFixed(6)}</p>
-                <p>Lng: {position.coords.longitude.toFixed(6)}</p>
-                <p>Accuracy: ±{position.coords.accuracy.toFixed(0)}m</p>
+                <p>{t('mileage.lat')}: {position.coords.latitude.toFixed(6)}</p>
+                <p>{t('mileage.lng')}: {position.coords.longitude.toFixed(6)}</p>
+                <p>{t('mileage.accuracy')}: ±{position.coords.accuracy.toFixed(0)}m</p>
               </div>
             )}
           </div>
@@ -133,30 +133,30 @@ const MileageTracker = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-primary" />
-              <h3 className="font-semibold text-card-foreground">Trip History</h3>
+              <h3 className="font-semibold text-card-foreground">{t('mileage.tripHistory')}</h3>
             </div>
             {tripHistory.length > 0 && (
               <Button variant="ghost" size="sm" onClick={resetHistory}>
-                Clear
+                {t('mileage.clear')}
               </Button>
             )}
           </div>
 
           {tripHistory.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-4">
-              No trips recorded yet
+              {t('mileage.noTrips')}
             </p>
           ) : (
             <div className="space-y-3">
               <div className="flex justify-between items-center p-3 bg-primary/5 rounded-lg">
-                <span className="font-semibold text-card-foreground">Total Mileage</span>
+                <span className="font-semibold text-card-foreground">{t('mileage.totalMileage')}</span>
                 <span className="text-lg font-bold text-primary">{totalMileage.toFixed(2)} km</span>
               </div>
               
               <div className="space-y-2">
                 {tripHistory.map((trip, index) => (
                   <div key={index} className="flex justify-between items-center p-2 border border-border rounded">
-                    <span className="text-sm text-muted-foreground">Trip {tripHistory.length - index}</span>
+                    <span className="text-sm text-muted-foreground">{t('mileage.trip')} {tripHistory.length - index}</span>
                     <span className="text-sm font-medium text-card-foreground">{trip.toFixed(2)} km</span>
                   </div>
                 ))}
@@ -166,16 +166,16 @@ const MileageTracker = () => {
         </Card>
 
         <Card className="p-6 shadow-card">
-          <h3 className="font-semibold text-card-foreground mb-3">How it works</h3>
+          <h3 className="font-semibold text-card-foreground mb-3">{t('mileage.howWorks')}</h3>
           <div className="space-y-2 text-sm text-muted-foreground">
             <p>
-              The mileage tracker uses your device's GPS to automatically calculate distance traveled.
+              {t('mileage.usesGPS')}
             </p>
             <p>
-              Start tracking before your trip and stop when you're done. All trips are saved to your history.
+              {t('mileage.startBefore')}
             </p>
             <p className="text-xs text-muted-foreground/70 pt-2">
-              Note: Requires location permissions and works best with high GPS accuracy.
+              {t('mileage.requiresLocation')}
             </p>
           </div>
         </Card>

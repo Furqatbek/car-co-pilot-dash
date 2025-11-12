@@ -44,9 +44,9 @@ const Notifications = () => {
                 <BellOff className="w-6 h-6 text-muted-foreground" />
               )}
               <div>
-                <h2 className="font-semibold text-card-foreground">Push Notifications</h2>
+                <h2 className="font-semibold text-card-foreground">{t('notifications.push')}</h2>
                 <p className="text-sm text-muted-foreground">
-                  {isRegistered ? "Enabled" : "Disabled"}
+                  {isRegistered ? t('notifications.enabled') : t('notifications.disabled')}
                 </p>
               </div>
             </div>
@@ -58,33 +58,33 @@ const Notifications = () => {
 
           <div className="space-y-3 text-sm text-muted-foreground">
             <p>
-              Enable notifications to receive alerts about:
+              {t('notifications.enableReceive')}
             </p>
             <ul className="list-disc list-inside space-y-1 ml-2">
-              <li>Upcoming maintenance reminders</li>
-              <li>Document expiration warnings</li>
-              <li>Service appointment confirmations</li>
-              <li>Important vehicle updates</li>
+              <li>{t('notifications.maintenanceReminders')}</li>
+              <li>{t('notifications.expirationWarnings')}</li>
+              <li>{t('notifications.appointments')}</li>
+              <li>{t('notifications.updates')}</li>
             </ul>
           </div>
 
           {token && (
             <div className="mt-4 pt-4 border-t border-border">
               <p className="text-xs text-muted-foreground">
-                Device Token: <code className="text-xs break-all">{token.substring(0, 40)}...</code>
+                {t('notifications.deviceToken')}: <code className="text-xs break-all">{token.substring(0, 40)}...</code>
               </p>
             </div>
           )}
         </Card>
 
         <Card className="p-6 shadow-card">
-          <h3 className="font-semibold text-card-foreground mb-3">How it works</h3>
+          <h3 className="font-semibold text-card-foreground mb-3">{t('notifications.howWorks')}</h3>
           <div className="space-y-2 text-sm text-muted-foreground">
             <p>
-              When you enable push notifications, CarCare can send you timely alerts even when the app is closed.
+              {t('notifications.whenEnabled')}
             </p>
             <p>
-              Note: Push notifications require the native mobile app (iOS or Android). They won't work in the web browser.
+              {t('notifications.requiresNative')}
             </p>
           </div>
         </Card>
