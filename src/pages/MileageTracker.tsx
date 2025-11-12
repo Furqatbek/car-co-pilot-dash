@@ -6,9 +6,11 @@ import { Card } from "@/components/ui/card";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { toast } from "@/hooks/use-toast";
 import { Position } from '@capacitor/geolocation';
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const MileageTracker = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { position, getCurrentPosition, watchPosition, clearWatch, calculateDistance } = useGeolocation();
   const [isTracking, setIsTracking] = useState(false);
   const [watchId, setWatchId] = useState<Promise<string> | null>(null);
@@ -83,7 +85,7 @@ const MileageTracker = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="text-xl font-bold text-foreground">Mileage Tracker</h1>
+          <h1 className="text-xl font-bold text-foreground">{t('mileage.title')}</h1>
         </div>
       </header>
 

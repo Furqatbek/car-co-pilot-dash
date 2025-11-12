@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Notifications = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { isRegistered, token, registerNotifications, unregisterNotifications } = usePushNotifications();
 
   const handleToggle = async () => {
@@ -28,7 +30,7 @@ const Notifications = () => {
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="text-xl font-bold text-foreground">Notifications</h1>
+          <h1 className="text-xl font-bold text-foreground">{t('notifications.title')}</h1>
         </div>
       </header>
 

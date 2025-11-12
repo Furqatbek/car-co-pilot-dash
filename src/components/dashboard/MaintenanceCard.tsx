@@ -1,5 +1,6 @@
 import { Gauge } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FluidLevel {
   name: string;
@@ -8,9 +9,10 @@ interface FluidLevel {
 }
 
 const MaintenanceCard = () => {
+  const { t } = useLanguage();
   const fluidLevels: FluidLevel[] = [
-    { name: "Oil", percentage: 75, color: "text-success" },
-    { name: "Gas", percentage: 45, color: "text-warning" },
+    { name: t('dashboard.oil'), percentage: 75, color: "text-success" },
+    { name: t('dashboard.gas'), percentage: 45, color: "text-warning" },
   ];
 
   const getGaugeColor = (percentage: number) => {
@@ -23,7 +25,7 @@ const MaintenanceCard = () => {
     <Card className="p-5 shadow-card hover:shadow-card-hover transition-shadow">
       <div className="flex items-center gap-2 mb-4">
         <Gauge className="w-5 h-5 text-primary" />
-        <h2 className="text-lg font-semibold text-card-foreground">Maintenance Status</h2>
+        <h2 className="text-lg font-semibold text-card-foreground">{t('dashboard.maintenance')}</h2>
       </div>
       
       <div className="grid grid-cols-2 gap-4">
