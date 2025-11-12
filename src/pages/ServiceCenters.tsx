@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, MapPin, Navigation, Wrench, Droplet, Fuel } from "lucide-react";
+import { ArrowLeft, MapPin, Navigation, Wrench, Droplet, Fuel, Route, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -9,6 +9,7 @@ import { useGeolocation } from "@/hooks/useGeolocation";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ServiceCenter {
   id: string;
@@ -18,6 +19,15 @@ interface ServiceCenter {
   longitude: number;
   distance?: number;
   category: string;
+}
+
+interface RouteInfo {
+  distance: number;
+  duration: number;
+  steps: Array<{
+    instruction: string;
+    distance: number;
+  }>;
 }
 
 type PlaceCategory = 'service' | 'carwash' | 'gas';
@@ -53,6 +63,8 @@ const ServiceCenters = () => {
   const [isLoadingToken, setIsLoadingToken] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<PlaceCategory>('service');
+  const [activeRoute, setActiveRoute] = useState<RouteInfo | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<ServiceCenter | null>(null);
   const { position, isLoading, getCurrentPosition, calculateDistance } = useGeolocation();
   const [serviceCenters, setServiceCenters] = useState<ServiceCenter[]>([]);
 
@@ -219,8 +231,128 @@ const ServiceCenters = () => {
 
   const handleCategorySearch = async (category: PlaceCategory) => {
     setSelectedCategory(category);
+    clearRoute();
     if (isMapInitialized) {
       await searchNearbyPlaces(category);
+    }
+  };
+
+  const getDirections = async (place: ServiceCenter) => {
+    if (!position || !mapboxToken || !map.current) return;
+
+    setSelectedPlace(place);
+
+    try {
+      const response = await fetch(
+        `https://api.mapbox.com/directions/v5/mapbox/driving/` +
+        `${position.coords.longitude},${position.coords.latitude};` +
+        `${place.longitude},${place.latitude}?` +
+        `steps=true&geometries=geojson&access_token=${mapboxToken}`
+      );
+
+      if (!response.ok) throw new Error('Failed to get directions');
+
+      const data = await response.json();
+      const route = data.routes[0];
+
+      if (!route) {
+        toast({
+          title: "No Route Found",
+          description: "Unable to find a route to this location",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Extract route information
+      const routeInfo: RouteInfo = {
+        distance: route.distance / 1000, // Convert to km
+        duration: route.duration / 60, // Convert to minutes
+        steps: route.legs[0].steps.map((step: any) => ({
+          instruction: step.maneuver.instruction,
+          distance: step.distance / 1000
+        }))
+      };
+
+      setActiveRoute(routeInfo);
+
+      // Draw route on map
+      const coordinates = route.geometry.coordinates;
+
+      // Remove existing route layer if any
+      if (map.current.getLayer('route')) {
+        map.current.removeLayer('route');
+        map.current.removeSource('route');
+      }
+
+      // Add route layer
+      map.current.addSource('route', {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates: coordinates
+          }
+        }
+      });
+
+      map.current.addLayer({
+        id: 'route',
+        type: 'line',
+        source: 'route',
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round'
+        },
+        paint: {
+          'line-color': '#3b82f6',
+          'line-width': 5,
+          'line-opacity': 0.75
+        }
+      });
+
+      // Fit map to show entire route
+      const bounds = coordinates.reduce(
+        (bounds: mapboxgl.LngLatBounds, coord: [number, number]) => {
+          return bounds.extend(coord as [number, number]);
+        },
+        new mapboxgl.LngLatBounds(coordinates[0], coordinates[0])
+      );
+
+      map.current.fitBounds(bounds, {
+        padding: 50
+      });
+
+      toast({
+        title: "Route Found",
+        description: `${routeInfo.distance.toFixed(1)} km • ${Math.round(routeInfo.duration)} min`,
+      });
+    } catch (error) {
+      console.error('Error getting directions:', error);
+      toast({
+        title: "Error",
+        description: "Failed to get directions",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const clearRoute = () => {
+    if (map.current && map.current.getLayer('route')) {
+      map.current.removeLayer('route');
+      map.current.removeSource('route');
+    }
+    setActiveRoute(null);
+    setSelectedPlace(null);
+
+    // Reset map view to user location
+    if (position && map.current) {
+      map.current.flyTo({
+        center: [position.coords.longitude, position.coords.latitude],
+        zoom: 13
+      });
     }
   };
 
@@ -285,6 +417,39 @@ const ServiceCenters = () => {
 
             <div ref={mapContainer} className="h-80 rounded-lg shadow-card" />
 
+            {activeRoute && selectedPlace && (
+              <Card className="p-4 shadow-card border-primary">
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-card-foreground">Route to {selectedPlace.name}</h3>
+                      <div className="flex gap-4 mt-2 text-sm text-muted-foreground">
+                        <span>{activeRoute.distance.toFixed(1)} km</span>
+                        <span>•</span>
+                        <span>{Math.round(activeRoute.duration)} min</span>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="icon" onClick={clearRoute}>
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  
+                  <ScrollArea className="h-32">
+                    <div className="space-y-2">
+                      {activeRoute.steps.map((step, index) => (
+                        <div key={index} className="text-sm">
+                          <p className="text-foreground">{step.instruction}</p>
+                          <p className="text-muted-foreground text-xs">
+                            {step.distance > 0 && `${step.distance.toFixed(1)} km`}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </div>
+              </Card>
+            )}
+
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h2 className="font-semibold text-foreground">
@@ -298,8 +463,9 @@ const ServiceCenters = () => {
               {serviceCenters.map((center) => {
                 const config = categoryConfig[center.category as PlaceCategory];
                 const Icon = config.icon;
+                const isSelected = selectedPlace?.id === center.id;
                 return (
-                  <Card key={center.id} className="p-4 shadow-card">
+                  <Card key={center.id} className={`p-4 shadow-card ${isSelected ? 'border-primary' : ''}`}>
                     <div className="flex items-start gap-3">
                       <Icon className="w-5 h-5 mt-1 flex-shrink-0" style={{ color: config.color }} />
                       <div className="flex-1">
@@ -310,6 +476,15 @@ const ServiceCenters = () => {
                             {center.distance.toFixed(2)} km away
                           </p>
                         )}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mt-2"
+                          onClick={() => getDirections(center)}
+                        >
+                          <Route className="w-4 h-4 mr-2" />
+                          Get Directions
+                        </Button>
                       </div>
                     </div>
                   </Card>
