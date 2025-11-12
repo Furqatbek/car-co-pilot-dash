@@ -1,27 +1,40 @@
-import { MapPin, Wrench, Droplets } from "lucide-react";
+import { MapPin, Wrench, Droplets, TrendingUp } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import BottomNav from "@/components/layout/BottomNav";
 import { Card } from "@/components/ui/card";
 
 const Services = () => {
+  const navigate = useNavigate();
+  
   const services = [
-    { 
-      icon: Droplets, 
-      name: "Gas Stations", 
-      count: 12,
-      color: "text-accent"
-    },
     { 
       icon: Wrench, 
       name: "Service Centers", 
       count: 8,
-      color: "text-primary"
+      color: "text-primary",
+      path: "/service-centers"
+    },
+    { 
+      icon: TrendingUp, 
+      name: "Mileage Tracker", 
+      description: "Track your trips",
+      color: "text-accent",
+      path: "/mileage"
+    },
+    { 
+      icon: Droplets, 
+      name: "Gas Stations", 
+      count: 12,
+      color: "text-success",
+      path: "/service-centers"
     },
     { 
       icon: MapPin, 
       name: "Car Wash", 
       count: 15,
-      color: "text-success"
+      color: "text-destructive",
+      path: "/service-centers"
     },
   ];
 
@@ -37,6 +50,7 @@ const Services = () => {
             <Card 
               key={service.name}
               className="p-5 shadow-card hover:shadow-card-hover transition-shadow cursor-pointer"
+              onClick={() => navigate(service.path)}
             >
               <div className="flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-full bg-muted flex items-center justify-center ${service.color}`}>
@@ -44,7 +58,9 @@ const Services = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-card-foreground">{service.name}</h3>
-                  <p className="text-sm text-muted-foreground">{service.count} nearby locations</p>
+                  <p className="text-sm text-muted-foreground">
+                    {service.count ? `${service.count} nearby locations` : service.description}
+                  </p>
                 </div>
               </div>
             </Card>
