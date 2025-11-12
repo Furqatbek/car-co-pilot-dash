@@ -1,22 +1,24 @@
 import { Bell, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "sonner";
 
 const Header = () => {
   const { signOut } = useAuth();
+  const { t } = useLanguage();
 
   const handleSignOut = async () => {
     await signOut();
-    toast.success('Signed out successfully');
+    toast.success(t('header.signOutSuccess'));
   };
 
   return (
     <header className="bg-card border-b border-border sticky top-0 z-40">
       <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-primary">CarCare</h1>
-          <p className="text-xs text-muted-foreground">Your digital co-pilot</p>
+          <h1 className="text-xl font-bold text-primary">{t('header.appTitle')}</h1>
+          <p className="text-xs text-muted-foreground">{t('header.appSubtitle')}</p>
         </div>
         
         <div className="flex items-center gap-2">

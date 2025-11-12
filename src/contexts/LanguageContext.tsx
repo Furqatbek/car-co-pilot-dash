@@ -17,6 +17,11 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.profile': 'Profile',
     'nav.notifications': 'Notifications',
     
+    // Header
+    'header.appTitle': 'CarCare',
+    'header.appSubtitle': 'Your digital co-pilot',
+    'header.signOutSuccess': 'Signed out successfully',
+    
     // Common
     'common.loading': 'Loading...',
     'common.error': 'Error',
@@ -127,6 +132,10 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.profile': 'Perfil',
     'nav.notifications': 'Notificaciones',
     
+    'header.appTitle': 'CarCare',
+    'header.appSubtitle': 'Tu copiloto digital',
+    'header.signOutSuccess': 'Sesión cerrada exitosamente',
+    
     'common.loading': 'Cargando...',
     'common.error': 'Error',
     'common.success': 'Éxito',
@@ -230,6 +239,10 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.services': 'Services',
     'nav.profile': 'Profil',
     'nav.notifications': 'Notifications',
+    
+    'header.appTitle': 'CarCare',
+    'header.appSubtitle': 'Votre copilote numérique',
+    'header.signOutSuccess': 'Déconnexion réussie',
     
     'common.loading': 'Chargement...',
     'common.error': 'Erreur',
@@ -335,6 +348,10 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.profile': 'Profil',
     'nav.notifications': 'Benachrichtigungen',
     
+    'header.appTitle': 'CarCare',
+    'header.appSubtitle': 'Ihr digitaler Copilot',
+    'header.signOutSuccess': 'Erfolgreich abgemeldet',
+    
     'common.loading': 'Laden...',
     'common.error': 'Fehler',
     'common.success': 'Erfolg',
@@ -438,6 +455,10 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.services': '服务',
     'nav.profile': '个人资料',
     'nav.notifications': '通知',
+    
+    'header.appTitle': 'CarCare',
+    'header.appSubtitle': '您的数字副驾驶',
+    'header.signOutSuccess': '成功退出登录',
     
     'common.loading': '加载中...',
     'common.error': '错误',
@@ -543,6 +564,10 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.profile': 'الملف الشخصي',
     'nav.notifications': 'الإشعارات',
     
+    'header.appTitle': 'CarCare',
+    'header.appSubtitle': 'مساعدك الرقمي',
+    'header.signOutSuccess': 'تم تسجيل الخروج بنجاح',
+    
     'common.loading': 'جاري التحميل...',
     'common.error': 'خطأ',
     'common.success': 'نجاح',
@@ -646,6 +671,10 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.services': 'Serviços',
     'nav.profile': 'Perfil',
     'nav.notifications': 'Notificações',
+    
+    'header.appTitle': 'CarCare',
+    'header.appSubtitle': 'Seu copiloto digital',
+    'header.signOutSuccess': 'Sessão encerrada com sucesso',
     
     'common.loading': 'Carregando...',
     'common.error': 'Erro',
@@ -751,6 +780,10 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.profile': 'Профиль',
     'nav.notifications': 'Уведомления',
     
+    'header.appTitle': 'CarCare',
+    'header.appSubtitle': 'Ваш цифровой помощник',
+    'header.signOutSuccess': 'Успешный выход',
+    
     'common.loading': 'Загрузка...',
     'common.error': 'Ошибка',
     'common.success': 'Успешно',
@@ -855,6 +888,10 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.profile': 'プロフィール',
     'nav.notifications': '通知',
     
+    'header.appTitle': 'CarCare',
+    'header.appSubtitle': 'あなたのデジタル副操縦士',
+    'header.signOutSuccess': 'サインアウトしました',
+    
     'common.loading': '読み込み中...',
     'common.error': 'エラー',
     'common.success': '成功',
@@ -958,6 +995,10 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.services': 'सेवाएं',
     'nav.profile': 'प्रोफ़ाइल',
     'nav.notifications': 'सूचनाएं',
+    
+    'header.appTitle': 'CarCare',
+    'header.appSubtitle': 'आपका डिजिटल सह-पायलट',
+    'header.signOutSuccess': 'सफलतापूर्वक साइन आउट हो गए',
     
     'common.loading': 'लोड हो रहा है...',
     'common.error': 'त्रुटि',
