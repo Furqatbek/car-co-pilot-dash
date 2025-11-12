@@ -5,9 +5,9 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ServiceCenter {
   id: number;
@@ -31,8 +31,35 @@ const ServiceCenters = () => {
   const map = useRef<mapboxgl.Map | null>(null);
   const [mapboxToken, setMapboxToken] = useState('');
   const [isMapInitialized, setIsMapInitialized] = useState(false);
+  const [isLoadingToken, setIsLoadingToken] = useState(false);
   const { position, isLoading, getCurrentPosition, calculateDistance } = useGeolocation();
   const [serviceCenters, setServiceCenters] = useState<ServiceCenter[]>(mockServiceCenters);
+
+  const fetchMapboxToken = async () => {
+    try {
+      setIsLoadingToken(true);
+      const { data, error } = await supabase.functions.invoke('get-mapbox-token');
+      
+      if (error) throw error;
+      
+      if (data?.token) {
+        setMapboxToken(data.token);
+        return data.token;
+      } else {
+        throw new Error('No token received');
+      }
+    } catch (error) {
+      console.error('Error fetching Mapbox token:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load map configuration",
+        variant: "destructive",
+      });
+      return null;
+    } finally {
+      setIsLoadingToken(false);
+    }
+  };
 
   const initializeMap = () => {
     if (!mapContainer.current || !mapboxToken) return;
@@ -94,6 +121,9 @@ const ServiceCenters = () => {
   }, [position, mapboxToken, isMapInitialized]);
 
   const handleGetLocation = async () => {
+    const token = await fetchMapboxToken();
+    if (!token) return;
+    
     await getCurrentPosition();
     toast({
       title: "Location Found",
@@ -117,34 +147,19 @@ const ServiceCenters = () => {
           <Card className="p-6 shadow-card">
             <div className="space-y-4">
               <div>
-                <h3 className="font-semibold text-card-foreground mb-2">Setup Required</h3>
+                <h3 className="font-semibold text-card-foreground mb-2">Find Nearby Service Centers</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Enter your Mapbox public token to view the map. Get one free at{' '}
-                  <a 
-                    href="https://mapbox.com" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    mapbox.com
-                  </a>
+                  Enable location services to find service centers near you.
                 </p>
-                <Input
-                  type="text"
-                  placeholder="pk.eyJ1IjoieW91ci10b2tlbi1oZXJlIi4uLg"
-                  value={mapboxToken}
-                  onChange={(e) => setMapboxToken(e.target.value)}
-                  className="mb-3"
-                />
               </div>
               
               <Button 
                 onClick={handleGetLocation} 
-                disabled={isLoading || !mapboxToken}
+                disabled={isLoading || isLoadingToken}
                 className="w-full"
               >
                 <Navigation className="w-4 h-4 mr-2" />
-                {isLoading ? 'Getting Location...' : 'Find Nearby Centers'}
+                {isLoadingToken ? 'Loading...' : isLoading ? 'Getting Location...' : 'Find Nearby Centers'}
               </Button>
             </div>
           </Card>
