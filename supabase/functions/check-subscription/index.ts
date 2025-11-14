@@ -35,20 +35,7 @@ serve(async (req) => {
     if (!user?.email) throw new Error("User not authenticated or email not available");
     logStep("User authenticated", { userId: user.id, email: user.email });
 
-    // TEMPORARY: Override for testing - remove in production
-    if (user.email === "lorem_ipsum@gmail.com") {
-      logStep("Test override: Setting user as premium");
-      return new Response(JSON.stringify({ 
-        subscribed: true,
-        tier: "premium",
-        subscription_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days from now
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200,
-      });
-    }
-
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", { 
+    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil" 
     });
 
