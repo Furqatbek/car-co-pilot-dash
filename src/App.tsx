@@ -11,8 +11,6 @@ import Profile from "./pages/Profile";
 import Notifications from "./pages/Notifications";
 import ServiceCenters from "./pages/ServiceCenters";
 import MileageTracker from "./pages/MileageTracker";
-import Subscription from "./pages/Subscription";
-import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import Auth from "./pages/Auth";
 import Vehicles from "./pages/Vehicles";
 import NotFound from "./pages/NotFound";
@@ -35,8 +33,6 @@ const App = () => (
             <Route path="/service-centers" element={<ProtectedRoute><ServiceCenters /></ProtectedRoute>} />
             <Route path="/mileage" element={<ProtectedRoute><MileageTracker /></ProtectedRoute>} />
             <Route path="/vehicles" element={<ProtectedRoute><Vehicles /></ProtectedRoute>} />
-            <Route path="/subscription" element={<ProtectedRoute><Subscription /></ProtectedRoute>} />
-            <Route path="/subscription-success" element={<ProtectedRoute><SubscriptionSuccess /></ProtectedRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
