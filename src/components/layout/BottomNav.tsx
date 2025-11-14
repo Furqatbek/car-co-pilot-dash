@@ -1,16 +1,13 @@
-import { Home, MapPin, User, Crown } from "lucide-react";
+import { Home, MapPin, User } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
-import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const BottomNav = () => {
-  const { subscription } = useAuth();
   const { t } = useLanguage();
   
   const navItems = [
     { icon: Home, label: t('nav.home'), path: "/" },
     { icon: MapPin, label: t('nav.services'), path: "/services" },
-    { icon: Crown, label: subscription.tier === 'premium' ? 'Premium' : 'Upgrade', path: "/subscription" },
     { icon: User, label: t('nav.profile'), path: "/profile" },
   ];
 
