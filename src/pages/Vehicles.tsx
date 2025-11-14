@@ -28,7 +28,7 @@ const Vehicles = () => {
     car_make: "",
     car_model: "",
     car_year: "",
-    car_plate: ""
+    car_plate: "",
   });
 
   useEffect(() => {
@@ -39,20 +39,20 @@ const Vehicles = () => {
 
   const fetchProfile = async () => {
     if (!user) return;
-    
+
     setIsLoading(true);
     const { data, error } = await supabase
-      .from('profiles')
-      .select('car_make, car_model, car_year, car_plate')
-      .eq('user_id', user.id)
+      .from("profiles")
+      .select("car_make, car_model, car_year, car_plate")
+      .eq("user_id", user.id)
       .maybeSingle();
 
     if (error) {
-      console.error('Error fetching profile:', error);
+      console.error("Error fetching profile:", error);
       toast({
-        title: t('common.error'),
-        description: 'Failed to load vehicle information',
-        variant: 'destructive'
+        title: t("common.error"),
+        description: "Failed to load vehicle information",
+        variant: "destructive",
       });
     } else if (data) {
       setProfile(data);
@@ -60,42 +60,42 @@ const Vehicles = () => {
         car_make: data.car_make || "",
         car_model: data.car_model || "",
         car_year: data.car_year?.toString() || "",
-        car_plate: data.car_plate || ""
+        car_plate: data.car_plate || "",
       });
     }
     setIsLoading(false);
   };
 
   const handleCarFormChange = (field: string, value: string) => {
-    setCarForm(prev => ({ ...prev, [field]: value }));
+    setCarForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSaveCarInfo = async () => {
     if (!user) return;
 
     const yearNum = carForm.car_year ? parseInt(carForm.car_year) : null;
-    
+
     const { error } = await supabase
-      .from('profiles')
+      .from("profiles")
       .update({
         car_make: carForm.car_make || null,
         car_model: carForm.car_model || null,
         car_year: yearNum,
-        car_plate: carForm.car_plate || null
+        car_plate: carForm.car_plate || null,
       })
-      .eq('user_id', user.id);
+      .eq("user_id", user.id);
 
     if (error) {
-      console.error('Error saving car info:', error);
+      console.error("Error saving car info:", error);
       toast({
-        title: t('common.error'),
-        description: 'Failed to save vehicle information',
-        variant: 'destructive'
+        title: t("common.error"),
+        description: "Failed to save vehicle information",
+        variant: "destructive",
       });
     } else {
       toast({
-        title: t('common.success'),
-        description: 'Vehicle information saved successfully'
+        title: t("common.success"),
+        description: "Vehicle information saved successfully",
       });
       fetchProfile();
     }
@@ -107,11 +107,7 @@ const Vehicles = () => {
     <div className="min-h-screen bg-background pb-20">
       <header className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
         <div className="max-w-md mx-auto px-4 py-4 flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate(-1)}
-          >
+          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <h1 className="text-xl font-bold text-card-foreground">Vehicle Information</h1>
@@ -127,7 +123,7 @@ const Vehicles = () => {
             <div>
               <h2 className="font-semibold text-card-foreground">My Vehicle</h2>
               <p className="text-sm text-muted-foreground">
-                {hasCarInfo ? 'Manage your vehicle details' : 'Add your vehicle information'}
+                {hasCarInfo ? "Manage your vehicle details" : "Add your vehicle information"}
               </p>
             </div>
           </div>
@@ -141,7 +137,7 @@ const Vehicles = () => {
                 <Input
                   id="car_make"
                   value={carForm.car_make}
-                  onChange={(e) => handleCarFormChange('car_make', e.target.value)}
+                  onChange={(e) => handleCarFormChange("car_make", e.target.value)}
                   placeholder="e.g., Toyota, Honda, Ford"
                 />
               </div>
@@ -151,7 +147,7 @@ const Vehicles = () => {
                 <Input
                   id="car_model"
                   value={carForm.car_model}
-                  onChange={(e) => handleCarFormChange('car_model', e.target.value)}
+                  onChange={(e) => handleCarFormChange("car_model", e.target.value)}
                   placeholder="e.g., Camry, Civic, Mustang"
                 />
               </div>
@@ -162,7 +158,7 @@ const Vehicles = () => {
                   id="car_year"
                   type="number"
                   value={carForm.car_year}
-                  onChange={(e) => handleCarFormChange('car_year', e.target.value)}
+                  onChange={(e) => handleCarFormChange("car_year", e.target.value)}
                   placeholder="e.g., 2023"
                   min="1900"
                   max={new Date().getFullYear() + 1}
@@ -174,7 +170,7 @@ const Vehicles = () => {
                 <Input
                   id="car_plate"
                   value={carForm.car_plate}
-                  onChange={(e) => handleCarFormChange('car_plate', e.target.value.toUpperCase())}
+                  onChange={(e) => handleCarFormChange("car_plate", e.target.value.toUpperCase())}
                   placeholder="e.g., ABC123"
                 />
               </div>
